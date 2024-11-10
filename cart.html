@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart</title>
+    <style>
+
+        body { font-family: Arial, sans-serif; 
+            display: flex;
+            flex-direction: column;
+            min-height: 20vh;
+            margin: 0;
+            
+          }
+        .background-image { 
+            background-image: url('1.png'); /* Replace with your image path */
+    background-size: cover;
+    background-position: center;
+    height: 20vh; /* Full viewport height */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-align: center;
+    
+
+        }
+        .float-right{ 
+           float: right;
+           padding: 20px;
+       
+    }
+    .footer{
+        background-color: maroon; 
+            padding: 250px;
+            text-align: center; 
+            
+            
+    }
+
+        .cart-item { margin: 10px 0; display: flex; justify-content: space-between; }
+        .clear-button { background-color: maroon; color: white; padding: 10px; border-radius: 5px; cursor: pointer}
+        .cancel-button { background-color: maroon; color: white; padding: 10px; border-radius: 5px; cursor: pointer}
+    </style>
+</head>
+<body>
+<div class = "background-image"></div>
+    <h1><center> Cart</center> </h1>
+   
+    <br>
+   
+    
+    <div id="cartItems"></div>
+    <center><button class="clear-button" onclick="clearCart()">Clear Cart</button>
+    <a href="front page.html">
+    <button class="cancel-button" onclick="Back()"> Back </button>
+    </a></center>
+    <div class= "float-right">
+        <h1>Total price</h1>
+    </div>
+    <br>
+    <div class = "footer"></div>
+    <script>
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+        function displayCart() {
+            const cartItemsContainer = document.getElementById('cartItems');
+            cartItemsContainer.innerHTML = '';
+            cart.forEach((item, index) => {
+                cartItemsContainer.innerHTML += `
+                    <div class="cart-item">
+                        <span>${index + 1}. ${item}</span>
+                        <button onclick="removeItem(${index})">Delete</button>
+                    </div>
+                `;
+            });
+        }
+
+        function removeItem(index) {
+            cart.splice(index, 1);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            displayCart();
+        }
+
+        function clearCart() {
+            cart = [];
+            localStorage.setItem('cart', JSON.stringify(cart));
+            displayCart();
+        }
+
+        displayCart();
+    </script>
+
+
+</div>
+</body>
+</html>

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chcekout</title>
+  <style>
+    body { font-family: Arial, sans-serif; }
+    .product { margin: 10px 0; }
+    .cart, .checkout-summary, .payment-form { margin-top: 20px; }
+    .cart-item, .checkout-item { display: flex; justify-content: space-between; }
+    .cart-item span, .checkout-item span { margin: 5px 0; }
+    .payment-input { margin: 5px 0; }
+    .background-image { 
+            background-image: url('1.png'); /* Replace with your image path */
+    background-size: cover;
+    background-position: center;
+    height: 20vh; /* Full viewport height */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-align: center;}
+    .footer{
+        background-color: maroon; 
+            padding: 250px;
+            text-align: center; 
+    }
+    .payment { background-color: maroon; color: white; padding: 10px; border-radius: 5px; cursor: pointer}
+  </style>
+</head>
+<body>
+  
+
+  <div class="cart">
+    <div class = "background-image"></div>
+    <h2><center>Checkout</center> </h2>
+    <div id="cartItems"></div>
+    <div id="total"></div>
+   
+    <center><button class="payment" onclick="payment()">Payment</button></center>
+  </div>
+  <br>
+
+  <div id="checkoutSummary" class="checkout-summary" style="display: none;">
+    <h2>Checkout Summary</h2>
+    <div id="checkoutItems"></div>
+    <div id="checkoutTotal"></div>
+    <button onclick="proceedToPayment()">Proceed to Payment</button>
+    <button onclick="cancelCheckout()">Cancel</button>
+  </div>
+
+  <div id="paymentForm" class="payment-form" style="display: none;">
+    <h2>Payment Information</h2>
+    <form onsubmit="processPayment(event)">
+      <label>
+        Name on Card:
+        <input type="text" class="payment-input" id="cardName" required>
+      </label><br>
+      <label>
+        Card Number:
+        <input type="text" class="payment-input" id="cardNumber" maxlength="16" required>
+      </label><br>
+      <label>
+        Expiry Date (MM/YY):
+        <input type="text" class="payment-input" id="expiryDate" maxlength="5" required>
+      </label><br>
+      <label>
+        CVV:
+        <input type="text" class="payment-input" id="cvv" maxlength="3" required>
+      </label><br><br>
+      <button type="submit">Confirm Payment</button>
+      <button type="button" onclick="cancelPayment()">Cancel</button>
+    </form>
+  </div>
+<div class="footer"></div>
+  <script>
+    const cart = [];
+
+    function addToCart(itemName, price) {
+      const itemIndex = cart.findIndex(item => item.name === itemName);
+      if (itemIndex > -1) {
+        cart[itemIndex].quantity += 1;
+      } else {
+        cart.push({ name: itemName, price: price, quantity: 1 });
+      }
+      displayCart();
+    }
+
+    function displayCart() {
+      const cartItemsDiv = document.getElementById('cartItems');
+      cartItemsDiv.innerHTML = ''; // Clear previous items
+
+      cart.forEach(item => {
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'cart-item';
+        itemDiv.innerHTML = `<span>${item.name} - $${item.price} x ${item.quantity}</span>
+                             <button onclick="removeFromCart('${item.name}')">Remove</button>`;
+        cartItemsDiv.appendChild(itemDiv);
+      });
+
+      updateTotal();
+    }
+
+    function updateTotal() {
+      const totalDiv = document.getElementById('total');
+      const total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
+      totalDiv.innerHTML = `<h3>Total: $${total.toFixed(2)}</h3>`;
+    }
+
+    function removeFromCart(itemName) {
+      const itemIndex = cart.findIndex(item => item.name === itemName);
+      if (itemIndex > -1) {
+        cart.splice(itemIndex, 1);
+        displayCart();
+      }
+    }
+
+    function clearCart() {
+      cart.length = 0; // Clear the cart array
+      displayCart();
+    }
+
+    function checkout() {
+      if (cart.length === 0) {
+        alert("Your cart is empty. Add items before checking out.");
+        return;
+      }
+
+      document.getElementById('checkoutSummary').style.display = 'block';
+      const checkoutItemsDiv = document.getElementById('checkoutItems');
+      checkoutItemsDiv.innerHTML = ''; // Clear previous checkout items
+
+      cart.forEach(item => {
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'checkout-item';
+        itemDiv.innerHTML = `<span>${item.name} - $${item.price} x ${item.quantity}</span>`;
+        checkoutItemsDiv.appendChild(itemDiv);
+      });
+
+      const checkoutTotalDiv = document.getElementById('checkoutTotal');
+      const total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
+      checkoutTotalDiv.innerHTML = `<h3>Total: $${total.toFixed(2)}</h3>`;
+    }
+
+    function proceedToPayment() {
+      document.getElementById('checkoutSummary').style.display = 'none';
+      document.getElementById('paymentForm').style.display = 'block';
+    }
+
+    function processPayment(event) {
+      event.preventDefault();
+
+      const cardName = document.getElementById('cardName').value;
+      const cardNumber = document.getElementById('cardNumber').value;
+      const expiryDate = document.getElementById('expiryDate').value;
+      const cvv = document.getElementById('cvv').value;
+
+      if (cardName && cardNumber && expiryDate && cvv) {
+        alert("Payment successful! Thank you for your purchase.");
+        clearCart();
+        document.getElementById('paymentForm').style.display = 'none';
+      } else {
+        alert("Please fill out all payment fields.");
+      }
+    }
+
+    function cancelCheckout() {
+      document.getElementById('checkoutSummary').style.display = 'none';
+    }
+
+    function cancelPayment() {
+      document.getElementById('paymentForm').style.display = 'none';
+    }
+  </script>
+</body>
+</html>
+
