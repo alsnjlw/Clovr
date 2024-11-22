@@ -23,12 +23,15 @@
             <nav class="navbar">
                 <ul>
                     <li>
+                        <a href="aboutus.html">About Us</a>
+                    </li>
+                    <li>
                         <div>
                             <a href="index.html">Home</a>
                         </div>
                     </li>
-                    <li><a href="">Login</a></li>
-                    <li><a href="">Register</a></li>
+                    <li><a href="login.html">Login</a></li>
+                    <li><a href="register.html">Register</a></li>
                     <li>
                         <div class="Cart">
                             <a href="cart.html">
@@ -50,13 +53,13 @@
                 <div class="row">
                     <div class="col-3">
                         <a href="women.html">
-                            <img src="woman.jpeg">
+                            <img src="woman.png">
                             <h3>WOMEN</h3>
                         </a>
                     </div>
                     <div class="col-3">
                         <a href="men.html">
-                            <img src="men.jpeg">
+                            <img src="men.png">
                             <h3>MEN</h3>
                         </a>
                     </div>
@@ -73,7 +76,7 @@
             <div class="row">
                 
                 <div class="col-4">
-                    <img src="w2.jpeg">
+                    <img src="w2.png">
                     <h4>Women Coral Long Blouse (WC332)</h4>
                     <div class="price-cart">
                         <p>$50.00 
@@ -86,7 +89,7 @@
 
 
                 <div class="col-4">
-                    <img src="w1.jpeg";>
+                    <img src="w1.png";>
                     <h4>Women Mint Crop Blazer (WM331)</h4>
                     <div class="price-cart">
                         <p>$50.00 
@@ -98,7 +101,7 @@
                    
                 </div>
                 <div class="col-4">
-                    <img src="m4.jpeg";>
+                    <img src="m4.png";>
                     <h4>Men Salmon Button Shirt</h4>
                     <div class="price-cart">
                         <p>$50.00 
@@ -112,72 +115,135 @@
 
         </div>
 
+        
+        
 
+        <!-- exclusive Section -->
+        <section class="offer">
+             <div class="container">
+                 <div class="row">
+                     <div class="col-2">
+                         <h2>Exclusively Available </h2>
+                         <p>Get the best deals and exclusive offers only for a limited time. Don't miss out on premium quality at amazing prices!</p>
+                         <a href="men.html" class="btn">Shop Now</a>
+                     </div>
+                     <div class="col-2">
+                         <img src="m1.jpeg" alt="Offer Image">
+                     </div>
+                </div>
+             </div>
+        </section>
 
-        <!-- Offer Section -->
-<section class="offer">
-    <div class="container">
-        <div class="row">
-            <div class="col-2">
-                <h2>Exclusively Available </h2>
-                <p>Get the best deals and exclusive offers only for a limited time. Don't miss out on premium quality at amazing prices!</p>
-                <a href="men.html" class="btn">Shop Now</a>
+        <!-- Footer Section -->
+        <footer class="footer">
+            <div class="container">
+                <div class="row">
+                    <div class="footer-col-1">
+                        <h3>Our Mission</h3>
+                        <p>We are dedicated to bringing you the best in style and quality.</p>
+                    </div>
+                    <div class="footer-col-2">
+                        <img src="logo3.png" alt="Brand Logo">
+                        <p>Connecting fashion with comfort and sustainability.</p>
+                    </div>
+                    <div class="footer-col-3">
+                        <h3>Useful Links</h3>
+                        <ul>
+                            <li><a href="#">Privacy Policy</a></li>
+                            <li><a href="#">Terms of Service</a></li>
+                            <li><a href="#">FAQ</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-col-4">
+                        <h3>Follow Us</h3>
+                        <ul>
+                            <li><a href="#">Instagram</a></li>
+                            <li><a href="#">Facebook</a></li>
+                            <li><a href="#">Twitter</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <hr>
+                <p class="copyright">© 2024 Clovr. All rights reserved.</p>
             </div>
-            <div class="col-2">
-                <img src="m1.jpeg" alt="Offer Image">
+        </footer>
+        
+
+        <!-- Login Modal -->
+        <div id="loginModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Login</h2>
+                <form action="login.php" method="post">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" required>
+
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" required>
+
+                    <button type="submit">Login</button>
+                </form>
             </div>
         </div>
-    </div>
-</section>
 
-<!-- Footer Section -->
-<footer class="footer">
-    <div class="container">
-        <div class="row">
-            <div class="footer-col-1">
-                <h3>Our Mission</h3>
-                <p>We are dedicated to bringing you the best in style and quality.</p>
-            </div>
-            <div class="footer-col-2">
-                <img src="logo3.png" alt="Brand Logo">
-                <p>Connecting fashion with comfort and sustainability.</p>
-            </div>
-            <div class="footer-col-3">
-                <h3>Useful Links</h3>
-                <ul>
-                    <li><a href="#">Privacy Policy</a></li>
-                    <li><a href="#">Terms of Service</a></li>
-                    <li><a href="#">FAQ</a></li>
-                </ul>
-            </div>
-            <div class="footer-col-4">
-                <h3>Follow Us</h3>
-                <ul>
-                    <li><a href="#">Instagram</a></li>
-                    <li><a href="#">Facebook</a></li>
-                    <li><a href="#">Twitter</a></li>
-                </ul>
-            </div>
-        </div>
-        <hr>
-        <p class="copyright">© 2024 Clovr. All rights reserved.</p>
-    </div>
-</footer>
-        <!---------footer------>
+        <!------- JavaScript for Login ------->
+        <script>
+           // Get the modal and close button
+            var modal = document.getElementById("loginModal");
+            var closeButton = document.querySelector(".modal .close");
 
+            // Get the login link and form inside the modal
+            var loginLink = document.querySelector("a[href='login.html']");
+            var loginForm = modal.querySelector("form");
 
+            // Open the modal when the login link is clicked
+            loginLink.onclick = function(event) {
+                event.preventDefault(); // Prevent default link behavior
+                modal.style.display = "block";
+            }
 
+            // Handle the form submission for login
+            loginForm.onsubmit = function(event) {
+                event.preventDefault(); // Prevent form from submitting to server
 
+                // Get username and password values
+                var username = document.getElementById("username").value;
+                var password = document.getElementById("password").value;
 
+                // AJAX request to check login data
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "check_login.php", true);
+                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                xhr.onload = function() {
+                    if (xhr.status == 200) {
+                        var response = JSON.parse(xhr.responseText);
+                
+                        if (response.status === "success") {
+                            // If login data exists
+                            alert("Login Successful");
+                            modal.style.display = "none"; // Close the modal
+                        } else {
+                            // If login data does not exist
+                            alert("Login data not found. Please register.");
+                            window.location.href = "register.html"; // Redirect to registration page
+                        }
+                    }
+                };
+                xhr.send("username=" + encodeURIComponent(username) + "&password=" + encodeURIComponent(password));
+            };
 
+            // Close the modal when the close button is clicked
+            closeButton.onclick = function() {
+                modal.style.display = "none";
+            }
 
-
-
-
-
-
-
-
+            // Close the modal when clicking outside the modal content
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+        </script>
 
     </body>
 </html>
