@@ -1,20 +1,51 @@
 <?php
-session_start();
-include 'cartdb.php'; // Include the database connection file
+// Database connection
+$conn = new mysqli("localhost", "root", "", "cartdb");
 
-// Retrieve cart items from session
-$cart_items = isset($_SESSION['cart']) ? $_SESSION['cart'] : [];
-$cart_prices = isset($_SESSION['prices']) ? $_SESSION['prices'] : [];
-
-// Clear cart if the "Clear Cart" button is pressed
-if (isset($_POST['clear_cart'])) {
-    unset($_SESSION['cart']);
-    unset($_SESSION['prices']);
-    header('Location: cart.php'); // Refresh the page after clearing the cart
-    exit();
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
 }
 
+// Add items to the database when the form is submitted
+if (isset($_POST['add_to_cart'])) {
+    $item_name = $_POST['item_name'];
+    $item_price = $_POST['item_price'];
+
+    $stmt = $conn->prepare("INSERT INTO cart_items (item_name, price) VALUES (?, ?)");
+    $stmt->bind_param("sd", $item_name, $item_price);
+
+    if ($stmt->execute()) {
+        echo "<p style='color: green;'>Item added to cart successfully!</p>";
+    } else {
+        echo "<p style='color: red;'>Error: " . $stmt->error . "</p>";
+    }
+
+    $stmt->close();
+}
+
+// Clear cart when the "Clear Cart" button is clicked
+if (isset($_POST['clear_cart'])) {
+    $conn->query("TRUNCATE TABLE cart_items");
+    echo "<p style='color: blue;'>Cart cleared successfully!</p>";
+}
+
+// Fetch cart items from the database
+$result = $conn->query("SELECT item_name, price FROM cart_items");
+
+$cart_items = [];
+$cart_prices = [];
+
+if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $cart_items[] = $row['item_name'];
+        $cart_prices[] = $row['price'];
+    }
+}
+
+$conn->close();
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -29,8 +60,9 @@ if (isset($_POST['clear_cart'])) {
             padding: 10px;
             border-radius: 5px;
             cursor: pointer;
+            text-decoration: none;
+            border: none;
         }
-       
         table {
             width: 100%;
             border-collapse: collapse;
@@ -44,32 +76,33 @@ if (isset($_POST['clear_cart'])) {
         }
         .background-image { 
             background-image: url('1.png'); /* Replace with your image path */
-    background-size: cover;
-    background-position: center;
-    height: 20vh; /* Full viewport height */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    text-align: center;
-}
-.footer{
-    background-color: maroon;
+            background-size: cover;
+            background-position: center;
+            height: 20vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+        }
+        .footer {
+            background-color: maroon;
             color: white;
             padding: 50px;
             text-align: center;
             position: relative;
             bottom: 0;
-            width: 100%
-      
-    }
+            width: 100%;
+        }
     </style>
-</head>
+    </head>
 <body>
-<div class = "background-image"> </div>
+    <div class="background-image">
+     
+    </div>
 
-    <center><h1>Cart</h1><center>
+    <center><h1>Cart</h1></center>
 
     <table>
         <tr>
@@ -77,7 +110,6 @@ if (isset($_POST['clear_cart'])) {
             <th>Price</th>
         </tr>
         <?php
-        // Display cart items
         if (count($cart_items) > 0) {
             $total = 0;
             for ($i = 0; $i < count($cart_items); $i++) {
@@ -95,7 +127,7 @@ if (isset($_POST['clear_cart'])) {
 
     <br>
     <!-- Continue Shopping Button -->
-    <a href="index.php">
+    <a href="index.html">
         <button class="cart_button">Continue Shopping</button>
     </a>
 
@@ -103,13 +135,15 @@ if (isset($_POST['clear_cart'])) {
     <form method="post" style="display:inline;">
         <button type="submit" name="clear_cart" class="clear_button">Clear Cart</button>
     </form>
-    <a href ="checkout.php">
+
+    <!-- Checkout Button -->
+    <a href="checkout.php">
         <button class="checkout">Checkout</button>
     </a>
-    <div class= "footer">
-    </div>
 
+    <div class="footer">
+        <p>© Clover. All rights reserved.</p>
+    </div>
 </body>
 </html>
-
 
