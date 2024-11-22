@@ -1,26 +1,27 @@
 <?php
-session_start();
+// Database connection
+$conn = new mysqli("localhost", "root", "", "cartdb");
 
-
-
-// Retrieve cart items and prices from the session
-$cart_items = isset($_SESSION['cart']) ? $_SESSION['cart'] : [];
-$cart_prices = isset($_SESSION['prices']) ? $_SESSION['prices'] : [];
-
-// Calculate the total price
-$total = 0;
-foreach ($cart_prices as $price) {
-    $total += $price;
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
 }
 
-// Handle checkout form submission
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Process the order (e.g., save to database, send confirmation email, etc.)
-    unset($_SESSION['cart']); // Clear the cart after checkout
-    unset($_SESSION['prices']);
-    header('Location: order_confirmation.php'); // Redirect to order confirmation page
-    exit();
+// Fetch cart items from the database
+$result = $conn->query("SELECT item_name, price FROM cart_items");
+
+$cart_items = [];
+$cart_prices = [];
+
+if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $cart_items[] = $row['item_name'];
+        $cart_prices[] = $row['price'];
+    }
+} else {
+    echo "<p style='color: red;'>Your cart is empty! Please add items before checking out.</p>";
 }
+
+$conn->close();
 ?>
 
 <!DOCTYPE html>
@@ -30,12 +31,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Checkout</title>
     <style>
-        .checkout_button, .back_button {
-            background-color: maroon;
-            color: white;
-            padding: 10px;
-            border-radius: 5px;
-            cursor: pointer;
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .checkout-container {
+            margin: 0 auto;
+            width: 80%;
+            padding: 20px;
         }
         table {
             width: 100%;
@@ -48,10 +50,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             padding: 10px;
             text-align: left;
         }
+        .total-row {
+            font-weight: bold;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 10px 0;
+            background-color: maroon;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background-color: darkred;
+        }
+        .background-image { 
+            background-image: url('1.png'); /* Replace with your image path */
+            background-size: cover;
+            background-position: center;
+            height: 20vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+        }
         .footer {
             background-color: maroon;
             color: white;
-            padding: 50px;
+            padding: 20px;
             text-align: center;
             position: relative;
             bottom: 0;
@@ -60,37 +91,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </style>
 </head>
 <body>
-    <h1>Checkout</h1>
+    <div class="background-image">
+        
+    </div>
 
-    <table>
-        <tr>
-            <th>Item Name</th>
-            <th>Price</th>
-        </tr>
-        <?php
-         if (count($cart_items) > 0) {
-            for ($i = 0; $i < count($cart_items); $i++) {
-                $item = $cart_items[$i];
-                $price = $cart_prices[$i];
-                echo "<tr><td>$item</td><td>\$$price</td></tr>";
+    <div class="checkout-container">
+        <h2>Your Order Summary</h2>
+        <table>
+            <tr>
+                <th>Item Name</th>
+                <th>Price</th>
+            </tr>
+            <?php
+            if (count($cart_items) > 0) {
+                $total = 0;
+                for ($i = 0; $i < count($cart_items); $i++) {
+                    $item = $cart_items[$i];
+                    $price = $cart_prices[$i];
+                    $total += $price;
+                    echo "<tr><td>$item</td><td>\$$price</td></tr>";
+                }
+                echo "<tr class='total-row'><td>Total</td><td>\$$total</td></tr>";
+            } else {
+                echo "<tr><td colspan='2'>Your cart is empty.</td></tr>";
             }
-            echo "<tr><td><strong>Total</strong></td><td><strong>\$$total</strong></td></tr>";
-        } else {
-            echo "<tr><td colspan='2'>Your cart is empty.</td></tr>";
-        }
-        ?>
-    </table>
+            ?>
+        </table>
 
-    <!-- Checkout Form -->
-    <form method="post">
-        <button type="submit" class="checkout_button">Confirm Order</button>
-    </form>
+        <div>
+            <a href="cart.php" class="btn">Go Back to Cart</a>
+            <a href="index.php" class="btn">Continue Shopping</a>
+            <a href="order_confirmation.php" class="btn">confirm</a> 
+        </div>
+    </div>
 
-    <!-- Back to Cart Button -->
-    <a href="cart.php">
-        <button class="back_button">Back to Cart</button>
-    </a>
-
-    <div class="footer"></div>
+    <div class="footer">
+        <p>© Clover. All rights reserved.</p>
+    </div>
 </body>
 </html>
+
